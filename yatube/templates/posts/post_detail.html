@@ -1,46 +1,33 @@
-<!DOCTYPE html>
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block header %}
+ {{ group }}
+{% endblock %} 
 {% block content %}
-{% load user_filters %}
-<html lang="ru">
-  <head>
-    <!-- Подключены иконки, стили и заполенены мета теги -->
-    <title>Пост {{ post.text|truncatechars:30 }}</title>
-  </head>
-  <body>
-    <header>
-      <nav class="navbar navbar-light" style="background-color: lightskyblue">
-        <div class="container">
-          <a class="navbar-brand" href="/">
-            <img src="/static/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            <span style="color:red">Ya</span>tube
-          </a>
-        </div>
-      </nav>      
-    </header>
-    <main>
+{% block title %}
+{{ title }}
+{% endblock %}
       <div class="row">
         <aside class="col-12 col-md-3">
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              Дата публикации: {{ post.pub_date|date:"d E Y" }} 
-              </li>
-              {% if post.group %}   
-              <li class="list-group-item">
-                Группа: href="{% url 'posts:group_list' post.group.slug %}">{{ post.group.title }}
-                <a href="<!-- -->">
-                  все записи группы
-              {% endif %}
-                </a>
-              </li>
+              Дата публикации:  {{ post.pub_date|date:"d E Y" }} 
+            </li>
             <li class="list-group-item">
-              Автор: href="{% url 'posts:profile' post.author %}">{{ post.author.get_full_name }}
+              Группа: {{ post.group.title }}
+              {% if post.group %}
+              <a href="{% url 'posts:group_posts' post.group.slug %}">
+              {% endif %}
+                все записи группы
+              </a>
+            </li>
+            <li class="list-group-item">
+              Автор: {{ post.author.get_full_name }}
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
-              Всего постов автора:  <span >{{ post.author.posts.count }}</span>
+              Всего постов автора:  {{ author_total_posts }}
             </li>
             <li class="list-group-item">
-              <a href="<!-- -->">
+              <a href="{% url 'posts:profile' post.author %}">
                 все посты пользователя
               </a>
             </li>
@@ -48,14 +35,12 @@
         </aside>
         <article class="col-12 col-md-9">
           <p>
-            {{ post.text|linebreaks }}
+            {{ post.text }} 
           </p>
+           <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+            редактировать запись
+          </a>  
         </article>
       </div> 
-    </main>
-    <footer class="border-top text-center py-3">
-      <p>© 2023 Copyright <span style="color:red">Ya</span>tube</p>
-    </footer>
-  </body>
-</html>
-{% endblock %}
+    {% endblock %}
+  

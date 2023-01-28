@@ -6,6 +6,6 @@ class PostForm(ModelForm):
     class Meta:
         model = Post
         labels = {'group': 'Группа', 'text': 'Текст поста'}
-        help_texts = {'group': 'Выберите группу',
-                      'text': 'Введите текст поста'}
+        help_texts = {'group': 'Группа, к которой будет относиться пост',
+                      'text': 'Текст нового поста'}
         fields = ['text', 'group']
