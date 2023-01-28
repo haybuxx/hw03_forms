@@ -3,14 +3,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from .models import Post, Group, User
-from .utils import get_context
+from .utils import get_context_page
 
 COUNT_POST_PAGE = 10
+COUNT_LINE = 30
 
 
 def index(request):
     posts = Post.objects.all()
-    page_obj = get_context(request, posts, COUNT_POST_PAGE)
+    page_obj = get_context_page(request, posts, COUNT_POST_PAGE)
     context = {
         'page_obj': page_obj,
     }
@@ -19,7 +20,7 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    page_obj = get_context(request, group.posts.all(), COUNT_POST_PAGE)
+    page_obj = get_context_page(request, group.posts.all(), COUNT_POST_PAGE)
     context = {
         'group': group,
         'page_obj': page_obj,
@@ -29,8 +30,8 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    author_total_posts = Post.objects.filter(author_id=author.pk).count()
-    page_obj = get_context(request, author.posts.all(), COUNT_POST_PAGE)
+    author_total_posts = author.posts.all()
+    page_obj = get_context_page(request, author_total_posts, COUNT_POST_PAGE)
     context = {
         'author': author,
         'author_total_posts': author_total_posts,
@@ -40,14 +41,13 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    author_total_posts = Post.objects.filter(author_id=post.author.pk).count()
-    title = 'Пост: ' + post.text[:30]
+    post = get_object_or_404(Post, pk=post_id) 
+    author_total_posts = post.author.posts.all()
+    title = 'Пост: ' + post.text[:COUNT_LINE]
     context = {
         'post': post,
         'author_total_posts': author_total_posts,
-        'title': title
-
+        'title': title,
     }
     return render(request, 'posts/post_detail.html', context)
 
