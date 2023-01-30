@@ -41,7 +41,7 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id) 
+    post = get_object_or_404(Post, pk=post_id)
     author_total_posts = post.author.posts.all()
     title = 'Пост: ' + post.text[:COUNT_LINE]
     context = {
