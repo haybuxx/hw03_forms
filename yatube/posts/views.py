@@ -6,7 +6,7 @@ from .models import Post, Group, User
 from .utils import get_context_page
 
 COUNT_POST_PAGE = 10
-COUNT_LINE = 30
+TEXT_SHORT = 30
 
 
 def index(request):
@@ -43,7 +43,7 @@ def profile(request, username):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     author_total_posts = post.author.posts.all()
-    title = 'Пост: ' + post.text[:COUNT_LINE]
+    title = 'Пост: ' + post.text[:TEXT_SHORT]
     context = {
         'post': post,
         'author_total_posts': author_total_posts,
